@@ -21,6 +21,7 @@ public class Customer {
     private Long custId;
     private String name;
     private String email;
+    private String phone;
     @OneToOne(fetch = LAZY)
     private Address address;
 }
