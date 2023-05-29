@@ -21,15 +21,12 @@ public class Invoice {
     private String invId;
     private String invNumber;
     @ManyToOne(fetch = LAZY)
-    //@JoinColumn(name = "custId",referencedColumnName = "custId")
     private Customer customer;
     @OneToMany(fetch = LAZY)
     private List<InvoiceItem> items;
     @ManyToOne(fetch = LAZY)
-    //@JoinColumn(name="addId",referencedColumnName = "addId")
     private Address billingAddress;
     @ManyToOne(fetch = LAZY)
-    //@JoinColumn(name="id", referencedColumnName = "id")
     private PaymentInfo paymentInfo;
     private Double totalAmount;
 }
