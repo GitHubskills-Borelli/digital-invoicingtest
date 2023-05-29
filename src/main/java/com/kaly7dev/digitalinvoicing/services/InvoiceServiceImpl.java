@@ -13,9 +13,11 @@ import com.kaly7dev.digitalinvoicing.repositories.CustomerRepo;
 import com.kaly7dev.digitalinvoicing.repositories.InvoiceItemRepo;
 import com.kaly7dev.digitalinvoicing.repositories.InvoiceRepo;
 import com.kaly7dev.digitalinvoicing.repositories.PaymentInfoRepo;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,11 +36,12 @@ public class InvoiceServiceImpl implements InvoiceService {
     private final AddressMapper addressMapper;
     private final InvoiceMapper invoiceMapper;
     @Override
+    @Transactional
     public void createInvoice(InvoiceRequest invoiceRequest) {
         Customer customerInvoice= customerRepo.findById(invoiceRequest.getCustId())
                 .orElseThrow(()-> new CustomerNotFoundException("Customer not exist !"));
-/*        PaymentInfo paymentInfoInvoice= paymentInfoRepo.findById(invoiceRequest.getPayId())
-                .orElseThrow(()-> new PaymentInfoNotFoundException(" Info payment Not exist ! "));*/
+        PaymentInfo paymentInfoInvoice= paymentInfoRepo.findById(invoiceRequest.getPayId())
+                .orElseThrow(()-> new PaymentInfoNotFoundException(" Info payment Not exist ! "));
 
         Invoice invoice= Invoice.builder()
                 .invId(UUID.randomUUID().toString())
@@ -46,7 +49,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .customer(customerInvoice)
                 .items(getInvoiceItemList(invoiceRequest.getInvoiceItemDtoList()))
                 .billingAddress(customerInvoice.getAddress())
-                //.paymentInfo(paymentInfoInvoice)
+                .paymentInfo(paymentInfoInvoice)
                 .totalAmount(invoiceRequest.getTotalAmount())
                 .build();
 
@@ -72,6 +75,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         return null;
     }
     @Override
+    @Transactional(readOnly = true)
     public List<InvoiceResponse> listInvoice() {
         return invoiceRepo.findAll()
                 .stream()
