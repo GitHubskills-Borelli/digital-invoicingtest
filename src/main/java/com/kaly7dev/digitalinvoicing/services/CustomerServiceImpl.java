@@ -46,8 +46,14 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    @Transactional
     public void deleteCustomer(Long custId) {
-
+        Customer custTodelete = customerRepo.findById(custId)
+                .orElseThrow(() ->
+                        new CustomerNotFoundException(
+                                "Unable to this Customer, Id " + custId.toString() + "Not found"));
+        customerRepo.delete(custTodelete);
+        log.info(" Customer deleted successfully");
     }
 
     @Override
