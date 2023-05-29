@@ -3,7 +3,6 @@ package com.kaly7dev.digitalinvoicing.services;
 import com.kaly7dev.digitalinvoicing.core_api.dtos.AddressDto;
 import com.kaly7dev.digitalinvoicing.core_api.dtos.CustomerDto;
 import com.kaly7dev.digitalinvoicing.core_api.exceptions.CustomerNotFoundException;
-import com.kaly7dev.digitalinvoicing.core_api.exceptions.AddressNotFoundException;
 import com.kaly7dev.digitalinvoicing.core_api.mappers.AddressMapper;
 import com.kaly7dev.digitalinvoicing.core_api.mappers.CustomerMapper;
 import com.kaly7dev.digitalinvoicing.entities.Address;
@@ -12,11 +11,13 @@ import com.kaly7dev.digitalinvoicing.repositories.AddressRepo;
 import com.kaly7dev.digitalinvoicing.repositories.CustomerRepo;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -69,6 +70,30 @@ public class CustomerServiceImpl implements CustomerService {
         }
         log.info("the list of customers successfully displayed");
         return customerDtoList;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Map<String, Object> paginateCustomers(String name, int page, int size) {
+            List<Customer> customerList= new ArrayList<>();
+            Pageable paging= PageRequest.of(page, size);
+
+            Page<Customer> customersPage;
+            if(name == null){
+                customersPage= customerRepo.findAll(paging);
+            }else{
+                customersPage= customerRepo.findByNameContaining(name, paging);
+            }
+
+            //get the information of the pagination and send it to frontend
+            customerList= customersPage.getContent();
+            Map<String, Object> pageState= new HashMap<>();
+            pageState.put("customers", customerList);
+            pageState.put("currentPage", customersPage.getNumber());
+            pageState.put("totalCustomers",customersPage.getTotalElements());
+            pageState.put("totalPages",customersPage.getTotalPages());
+
+            return pageState;
     }
 
     /**

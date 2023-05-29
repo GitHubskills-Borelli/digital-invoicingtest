@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.ResponseEntity.status;
@@ -35,4 +36,16 @@ public class CustomerController {
         customerService.deleteCustomer(custId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+    ///////////////////////////// pagination and filtering endpoints ///////////////////////////////////////////////////
+    @GetMapping("/paginatedlist")
+    public ResponseEntity<Map<String, Object>> paginateCustomers(@RequestParam(required = false) String name,
+                                                                 @RequestParam(defaultValue ="0") int page,
+                                                                 @RequestParam(defaultValue ="3") int size){
+        try {
+            return new ResponseEntity<>(customerService.paginateCustomers(name, page, size), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }
