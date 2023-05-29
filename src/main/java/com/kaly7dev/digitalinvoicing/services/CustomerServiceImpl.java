@@ -1,6 +1,9 @@
 package com.kaly7dev.digitalinvoicing.services;
 
+import com.kaly7dev.digitalinvoicing.core_api.dtos.AddressDto;
 import com.kaly7dev.digitalinvoicing.core_api.dtos.CustomerDto;
+import com.kaly7dev.digitalinvoicing.core_api.exceptions.CustomerNotFoundException;
+import com.kaly7dev.digitalinvoicing.core_api.exceptions.AddressNotFoundException;
 import com.kaly7dev.digitalinvoicing.core_api.mappers.AddressMapper;
 import com.kaly7dev.digitalinvoicing.core_api.mappers.CustomerMapper;
 import com.kaly7dev.digitalinvoicing.entities.Address;
@@ -34,8 +37,12 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerDto updateCustomer(CustomerDto customerDto) {
-        return null;
+    @Transactional
+    public CustomerDto updateCustomer(Long custId, CustomerDto customerDto) {
+        Customer custtoUpdate= customerRepo.findById(custId)
+                .orElseThrow(()->new CustomerNotFoundException("Customer not found with ID: "+custId.toString()));
+
+        return getUpdatedCustomer(custtoUpdate, customerDto);
     }
 
     @Override
@@ -56,5 +63,35 @@ public class CustomerServiceImpl implements CustomerService {
         }
         log.info("the list of customers successfully displayed");
         return customerDtoList;
+    }
+
+    /**
+     * this fonction make a update process on customer repository
+     * @param customer
+     * @param customerDto
+     * @return customerDto
+     */
+    private CustomerDto getUpdatedCustomer(Customer customer, CustomerDto customerDto) {
+        customer.setName(customerDto.getName());
+        customer.setPhone(customerDto.getPhone());
+        customer.setEmail(customerDto.getEmail());
+
+        customer.setAddress(getUpdatedAddress(customer.getAddress(),customerDto.getAddressDto()));
+
+        customerDto.setCustId(customer.getCustId());
+        customerDto.getAddressDto().setAddId(customer.getAddress().getAddId());
+
+        customerRepo.save(customer);
+        log.info("Customer updated successfully ! ");
+        return customerDto;
+    }
+
+    private Address getUpdatedAddress(Address address, AddressDto addressDto) {
+        address.setCity(addressDto.getCity());
+        address.setStreet(addressDto.getStreet());
+        address.setZipCode(addressDto.getZipCode());
+        address.setCountry(addressDto.getCountry());
+
+        return addressRepo.save(address);
     }
 }

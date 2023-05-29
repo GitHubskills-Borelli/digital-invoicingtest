@@ -12,7 +12,7 @@ public class CustomerMapper {
                 .name(customer.getName())
                 .email(customer.getEmail())
                 .phone(customer.getPhone())
-                //.address(customer.getAddress())
+                //.addressDto(customer.getAddress())
                 .build();
     }
 
