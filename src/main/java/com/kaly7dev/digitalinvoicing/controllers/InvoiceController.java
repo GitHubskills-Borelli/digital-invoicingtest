@@ -24,4 +24,15 @@ public class InvoiceController {
     public ResponseEntity<List<InvoiceResponse>> getInvoiceList(){
         return ResponseEntity.status(HttpStatus.OK).body(invoiceService.listInvoice());
     }
+    @PutMapping("/update/{invId}")
+    public ResponseEntity<String> updateInvoice(@PathVariable String invId,
+                                                @RequestBody InvoiceRequest invoiceRequest){
+        invoiceService.updateInvoice(invId,invoiceRequest);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    @DeleteMapping("/delete/{invId}")
+    public ResponseEntity<String> deleteInvoice(@PathVariable String invId){
+        invoiceService.deleteInvoice(invId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

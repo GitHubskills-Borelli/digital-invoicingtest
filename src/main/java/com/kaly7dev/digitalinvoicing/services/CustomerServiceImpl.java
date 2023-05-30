@@ -14,9 +14,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 @Service
@@ -74,24 +76,23 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional(readOnly = true)
-    public Map<String, Object> paginateCustomers(String name, int page, int size) {
-            List<Customer> customerList= new ArrayList<>();
+    public Map<String, Object> paginateCustomers(String name, int page, int size) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
             Pageable paging= PageRequest.of(page, size);
 
-            Page<Customer> customersPage;
-            if(name == null){
-                customersPage= customerRepo.findAll(paging);
-            }else{
-                customersPage= customerRepo.findByNameContaining(name, paging);
-            }
+        Page<Customer> customersPage;
+        if(name == null){
+            customersPage= customerRepo.findAll(paging);
+        }else{
+            customersPage= customerRepo.findByNameContaining(name, paging);
+        }
 
-            //get the information of the pagination and send it to frontend
-            customerList= customersPage.getContent();
+        //get the information of the pagination and send it to frontend
+        List<Customer> customerList= customersPage.getContent();
             Map<String, Object> pageState= new HashMap<>();
             pageState.put("customers", customerList);
-            pageState.put("currentPage", customersPage.getNumber());
-            pageState.put("totalCustomers",customersPage.getTotalElements());
-            pageState.put("totalPages",customersPage.getTotalPages());
+            pageState.put("currentPage", Optional.of(customersPage.getNumber()));
+            pageState.put("totalCustomers", Optional.of(customersPage.getTotalElements()));
+            pageState.put("totalPages", Optional.of(customersPage.getTotalPages()));
 
             return pageState;
     }

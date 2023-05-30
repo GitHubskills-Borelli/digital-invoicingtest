@@ -11,7 +11,6 @@ import java.util.List;
 @NoArgsConstructor
 public class InvoiceRequest {
     private String invId;
-    private String invNumber;
     private List<InvoiceItemDto> invoiceItemDtoList;
     private Long custId;
     private Long payId;

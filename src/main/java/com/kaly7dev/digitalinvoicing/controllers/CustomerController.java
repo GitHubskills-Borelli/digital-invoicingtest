@@ -39,12 +39,12 @@ public class CustomerController {
     ///////////////////////////// pagination and filtering endpoints ///////////////////////////////////////////////////
     @GetMapping("/paginatedlist")
     public ResponseEntity<Map<String, Object>> paginateCustomers(@RequestParam(required = false) String name,
-                                                                 @RequestParam(defaultValue ="0") int page,
-                                                                 @RequestParam(defaultValue ="3") int size){
+                                                                 @RequestParam(defaultValue ="0") Integer page,
+                                                                 @RequestParam(defaultValue ="3") Integer size){
         try {
             return new ResponseEntity<>(customerService.paginateCustomers(name, page, size), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(  null,HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
