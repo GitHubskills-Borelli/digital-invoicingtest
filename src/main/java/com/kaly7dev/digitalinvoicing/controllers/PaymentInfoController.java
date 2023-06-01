@@ -23,4 +23,15 @@ public class PaymentInfoController {
     public ResponseEntity<List<PaymentInfoDto>> paymentInfoList(){
         return ResponseEntity.status(HttpStatus.OK).body(paymentInfoService.paymentInfoList());
     }
+    @PutMapping("/update/{payId}")
+    public ResponseEntity<String> updatePaymentInfo(@PathVariable Long payId,
+                                                    @RequestBody PaymentInfoDto paymentInfoDto){
+        paymentInfoService.updatePaymentInfo(payId, paymentInfoDto);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+    @DeleteMapping("/delete/{payId}")
+    public ResponseEntity<String> deletePaymentInfo(@PathVariable Long payId){
+        paymentInfoService.deletePaymentInfo(payId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

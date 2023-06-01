@@ -53,6 +53,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         log.info(" Invoice created successfully");
     }
 
+
     private PaymentInfo getPaymentInfoInDb(Long payId) {
         return paymentInfoRepo.findById(payId)
                 .orElseThrow(()-> new PaymentInfoNotFoundException(" Info payment Not exist ! "));
@@ -63,7 +64,7 @@ public class InvoiceServiceImpl implements InvoiceService {
                 .orElseThrow(()-> new CustomerNotFoundException("Customer not exist !"));
     }
 
-    private static String getInvoiceNumber(Integer size) {
+    private  String getInvoiceNumber(Integer size) {
         return String.format("inv-"+size);
     }
 

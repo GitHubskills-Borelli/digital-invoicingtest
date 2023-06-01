@@ -7,4 +7,8 @@ import java.util.List;
 public interface PaymentInfoService {
     void createPaymentInfo(PaymentInfoDto paymentInfoDto);
     List<PaymentInfoDto> paymentInfoList();
+
+    void updatePaymentInfo(Long payId, PaymentInfoDto paymentInfoDto);
+
+    void deletePaymentInfo(Long payId);
 }

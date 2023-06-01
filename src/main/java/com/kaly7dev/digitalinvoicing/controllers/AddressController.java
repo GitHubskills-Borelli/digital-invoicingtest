@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
@@ -23,5 +24,15 @@ public class AddressController {
     public ResponseEntity<AddressDto> updateAddress(@PathVariable Long addId,
                                                     @RequestBody AddressDto addressDto){
         return ResponseEntity.status(OK).body(addressService.updateAddress(addId, addressDto));
+    }
+    @PostMapping("/create")
+    public ResponseEntity<String> createAddress(@RequestBody AddressDto addressDto){
+        addressService.createAddress(addressDto);
+        return new ResponseEntity<>(CREATED);
+    }
+    @DeleteMapping("/delete/{addId}")
+    public ResponseEntity<String> demeteAddress(@PathVariable  Long addId){
+        addressService.deleteAddress(addId);
+        return new ResponseEntity<>(CREATED);
     }
 }

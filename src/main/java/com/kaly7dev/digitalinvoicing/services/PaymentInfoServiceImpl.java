@@ -1,7 +1,9 @@
 package com.kaly7dev.digitalinvoicing.services;
 
 import com.kaly7dev.digitalinvoicing.core_api.dtos.PaymentInfoDto;
+import com.kaly7dev.digitalinvoicing.core_api.exceptions.PaymentInfoNotFoundException;
 import com.kaly7dev.digitalinvoicing.core_api.mappers.PaymentInfoMapper;
+import com.kaly7dev.digitalinvoicing.entities.PaymentInfo;
 import com.kaly7dev.digitalinvoicing.repositories.PaymentInfoRepo;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,4 +38,32 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
         log.info(" PaymentInfo list successfuly displayed ! ");
         return paymentInfoDtoList;
     }
+
+    @Override
+    @Transactional
+    public void updatePaymentInfo(Long payId, PaymentInfoDto paymentInfoDto) {
+        PaymentInfo paymentInfo= getPaymentInfoInfDB(payId);
+
+        paymentInfo.setCardNumber(paymentInfoDto.getCardNumber());
+        paymentInfo.setCvv(paymentInfoDto.getCvv());
+        paymentInfo.setCardType(paymentInfoDto.getCardType());
+        paymentInfo.setExpirationYear(paymentInfoDto.getExpirationYear());
+        paymentInfo.setExpirationMonth(paymentInfoDto.getExpirationMonth());
+
+        paymentInfoRepo.save(paymentInfo);
+        log.info("PaymentInfo updated Successfully ! ");
+    }
+
+    private PaymentInfo getPaymentInfoInfDB(Long payId) {
+        return paymentInfoRepo.findById(payId)
+                .orElseThrow(()->new PaymentInfoNotFoundException("PaymentInfo not found"));
+    }
+
+    @Override
+    @Transactional
+    public void deletePaymentInfo(Long payId) {
+        paymentInfoRepo.delete(getPaymentInfoInfDB(payId));
+        log.info("paymentinfo deleted Successfully ! ");
+    }
+
 }

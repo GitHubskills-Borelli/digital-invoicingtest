@@ -19,6 +19,29 @@ import java.util.stream.Collectors;
 public class AddressServiceImpl implements AddressService {
     private final AddressRepo addressRepo;
     private final AddressMapper addressMapper;
+
+    @Override
+    public void deleteAddress(Long addId) {
+        Address addressToDelete= addressRepo.findById(addId)
+                .orElseThrow(()->new AddressNotFoundException("Address not found"));
+        addressRepo.delete(addressToDelete);
+        log.info("Address deleted Successfully !");
+    }
+
+    @Override
+    @Transactional
+    public void createAddress(AddressDto addressDto) {
+        Address address= Address.builder()
+                .city(addressDto.getCity())
+                .street(addressDto.getStreet())
+                .zipCode(addressDto.getZipCode())
+                .country(addressDto.getCountry())
+                .build();
+
+        addressRepo.save(address);
+        log.info("Address created successfully !");
+    }
+
     @Override
     @Transactional
     public AddressDto updateAddress(Long addId, AddressDto addressDto) {
