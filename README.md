@@ -63,3 +63,12 @@ The frontend app should implememt the following features:
 - Please create a 'production-ready' service as you see it (documentation / tests / logs / exception handling).
 - Please provide an instruction on how to run the app.
 - Submit your solution either as a public repository (github, bitbucket, etc.) or as a zip archive.
+
+### HOW TO RUN THE TEST RESULT
+
+- first at all go to application.properties and uncomment the dev profiles. don't forget to comment de prod profiles
+- secondly run the application by execute this command line in the root directory: mvn spring-boot:run
+- Got to the browser and lanch this url : http://localhost:8080/swagger-ui.html 
+- At the end you are able to acces on differente endpoint of the backend app
+
+Thank you ! 
