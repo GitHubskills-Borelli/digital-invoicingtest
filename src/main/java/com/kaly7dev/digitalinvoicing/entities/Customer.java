@@ -24,4 +24,5 @@ public class Customer {
     private String phone;
     @OneToOne(fetch = LAZY)
     private Address address;
+    private boolean checked;
 }

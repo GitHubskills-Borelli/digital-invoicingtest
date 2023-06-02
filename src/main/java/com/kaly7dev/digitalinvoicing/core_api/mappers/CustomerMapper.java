@@ -13,6 +13,7 @@ public class CustomerMapper {
                 .email(customer.getEmail())
                 .phone(customer.getPhone())
                 //.addressDto(customer.getAddress())
+                .checked(customer.isChecked())
                 .build();
     }
 
@@ -22,6 +23,7 @@ public class CustomerMapper {
                 .email(customerDto.getEmail())
                 .phone(customerDto.getPhone())
                 .address(null)
+                .checked(customerDto.isChecked())
                 .build();
     }
 }

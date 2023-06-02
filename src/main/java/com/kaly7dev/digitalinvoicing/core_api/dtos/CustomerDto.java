@@ -15,4 +15,5 @@ public class CustomerDto {
     private String email;
     private String phone;
     private AddressDto addressDto;
+    private boolean checked;
 }
